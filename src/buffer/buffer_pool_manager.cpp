@@ -61,7 +61,7 @@ Page *BufferPoolManager::FetchPageImpl(page_id_t page_id) {
     }
     // 2.0 write it back to the disk;
     if (pages_[frame_id].is_dirty_) {
-      disk_manager_ -> WritePage(pages_[frame_id].GetPageId(), pages_[frame_id].GetData());
+      disk_manager_->WritePage(pages_[frame_id].GetPageId(), pages_[frame_id].GetData());
     }
     // delete and insert P
     page_table_.erase(pages_[frame_id].GetPageId());
@@ -88,7 +88,7 @@ bool BufferPoolManager::UnpinPageImpl(page_id_t page_id, bool is_dirty) {
   }
   pages_[it->second].pin_count_--;
   if (is_dirty) {
-	  pages_[it->second].is_dirty_ = true;
+    pages_[it->second].is_dirty_ = true;
   }
   if (pages_[it->second].pin_count_ == 0) {
     replacer_->Unpin(it->second);
@@ -103,9 +103,8 @@ bool BufferPoolManager::FlushPageImpl(page_id_t page_id) {
   if (it == page_table_.end()) {
     return false;
   }
-  if (pages_[it -> second].is_dirty_){
+  if (pages_[it->second].is_dirty_) {
     disk_manager_->WritePage(page_id, pages_[it->second].GetData());
-    // pages_[it->second].is_dirty_ = false;
   }
   return true;
 }
@@ -126,8 +125,8 @@ Page *BufferPoolManager::NewPageImpl(page_id_t *page_id) {
       return nullptr;
     }
   }
-  if (pages_[frame_id].is_dirty_){
-  	disk_manager_ -> WritePage(pages_[frame_id].GetPageId(), pages_[frame_id].GetData());
+  if (pages_[frame_id].is_dirty_) {
+    disk_manager_->WritePage(pages_[frame_id].GetPageId(), pages_[frame_id].GetData());
   }
   page_table_.erase(pages_[frame_id].GetPageId());
   // update P's metadata
@@ -157,13 +156,13 @@ bool BufferPoolManager::DeletePageImpl(page_id_t page_id) {
   if (pages_[it->second].GetPinCount() > 0) {
     return false;
   }
-  Page* to_delete = &pages_[it -> second];
+  Page *to_delete = &pages_[it->second];
   free_list_.emplace_back(it->second);
   page_table_.erase(it);
   to_delete->ResetMemory();
   to_delete->page_id_ = INVALID_PAGE_ID;
-  to_delete->is_dirty_=false;
-  to_delete->pin_count_=0;
+  to_delete->is_dirty_ = false;
+  to_delete->pin_count_ = 0;
   return true;
 }
 

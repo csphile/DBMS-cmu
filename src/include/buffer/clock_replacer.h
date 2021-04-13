@@ -15,6 +15,7 @@
 #include <list>
 #include <mutex>  // NOLINT
 #include <vector>
+#include <unordered_map>
 
 #include "buffer/replacer.h"
 #include "common/config.h"
@@ -47,6 +48,9 @@ class ClockReplacer : public Replacer {
 
  private:
   // TODO(student): implement me!
+  int sz_;
+  std::list<std::pair<frame_id_t, int>> frames;
+  std::unordered_map<frame_id_t, std::list<std::pair<frame_id_t, int>>::iterator > mp;
 };
 
 }  // namespace bustub
